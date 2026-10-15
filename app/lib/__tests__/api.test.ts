@@ -7,6 +7,7 @@ import {
   listCategories,
   listHabits,
   skipHabit,
+  uncompleteHabit,
   unskipHabit,
   updateHabit,
 } from "@/app/lib/api";
@@ -179,6 +180,24 @@ describe("habits api client", () => {
     expect(result).toEqual(updated);
     expect(fetchMock).toHaveBeenCalledWith(
       expect.stringContaining("/habits/2/skip"),
+      expect.objectContaining({ method: "DELETE" })
+    );
+  });
+
+  it("uncompleteHabit issues a DELETE to the complete endpoint", async () => {
+    const updated = makeMockHabit({ id: 2, completed_today: false });
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => updated,
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const result = await uncompleteHabit(2);
+
+    expect(result).toEqual(updated);
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining("/habits/2/complete"),
       expect.objectContaining({ method: "DELETE" })
     );
   });
