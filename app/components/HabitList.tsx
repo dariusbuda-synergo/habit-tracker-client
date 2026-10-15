@@ -18,6 +18,7 @@ interface HabitListProps {
   onDuplicate: (id: number) => void;
   onPinToggle?: (id: number, pinned: boolean) => void;
   onPriorityChange?: (id: number, priority: string) => void;
+  onUncomplete?: (id: number) => void;
   emptyMessage?: string;
 }
 
@@ -32,6 +33,7 @@ export default function HabitList({
   onDuplicate,
   onPinToggle,
   onPriorityChange,
+  onUncomplete,
   emptyMessage = "No habits yet — add one above to get started.",
 }: HabitListProps) {
   if (habits.length === 0) {
@@ -57,6 +59,7 @@ export default function HabitList({
           onDuplicate={onDuplicate}
           onPinToggle={onPinToggle}
           onPriorityChange={onPriorityChange}
+          onUncomplete={onUncomplete}
         />
       ))}
     </ul>

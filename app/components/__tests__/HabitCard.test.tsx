@@ -150,7 +150,66 @@ describe("HabitCard", () => {
     expect(onComplete).toHaveBeenCalledWith(7);
   });
 
-  it("disables the button once already completed today", () => {
+  it("offers an enabled Undo instead of a disabled button once completed today", () => {
+    render(
+      <HabitCard
+        habit={makeMockHabit({ completed_today: true })}
+        onComplete={vi.fn()}
+        onSkip={vi.fn()}
+        onUnskip={vi.fn()}
+        onDelete={vi.fn()}
+        onEdit={vi.fn()}
+        onArchiveToggle={vi.fn()}
+        onDuplicate={vi.fn()}
+        onUncomplete={vi.fn()}
+      />
+    );
+    const undo = screen.getByRole("button", { name: /undo/i });
+    expect(undo).not.toBeDisabled();
+    expect(undo).toHaveTextContent("Undo");
+    expect(screen.queryByRole("button", { name: /done today/i })).toBeNull();
+    expect(screen.queryByRole("button", { name: /mark done/i })).toBeNull();
+  });
+
+  it("calls onUncomplete with the habit id when undoing today's completion", async () => {
+    const onComplete = vi.fn();
+    const onUncomplete = vi.fn();
+    render(
+      <HabitCard
+        habit={makeMockHabit({ id: 7, completed_today: true })}
+        onComplete={onComplete}
+        onSkip={vi.fn()}
+        onUnskip={vi.fn()}
+        onDelete={vi.fn()}
+        onEdit={vi.fn()}
+        onArchiveToggle={vi.fn()}
+        onDuplicate={vi.fn()}
+        onUncomplete={onUncomplete}
+      />
+    );
+    await userEvent.click(screen.getByRole("button", { name: /undo/i }));
+    expect(onUncomplete).toHaveBeenCalledWith(7);
+    expect(onComplete).not.toHaveBeenCalled();
+  });
+
+  it("disables Undo for an archived habit completed today", () => {
+    render(
+      <HabitCard
+        habit={makeMockHabit({ completed_today: true, archived: true })}
+        onComplete={vi.fn()}
+        onSkip={vi.fn()}
+        onUnskip={vi.fn()}
+        onDelete={vi.fn()}
+        onEdit={vi.fn()}
+        onArchiveToggle={vi.fn()}
+        onDuplicate={vi.fn()}
+        onUncomplete={vi.fn()}
+      />
+    );
+    expect(screen.getByRole("button", { name: /undo/i })).toBeDisabled();
+  });
+
+  it("disables Undo when no onUncomplete handler is passed", () => {
     render(
       <HabitCard
         habit={makeMockHabit({ completed_today: true })}
@@ -163,7 +222,7 @@ describe("HabitCard", () => {
         onDuplicate={vi.fn()}
       />
     );
-    expect(screen.getByRole("button", { name: /done today/i })).toBeDisabled();
+    expect(screen.getByRole("button", { name: /undo/i })).toBeDisabled();
   });
 
   it("calls onDelete with the habit id once the user confirms", async () => {
