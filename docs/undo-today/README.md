@@ -16,7 +16,7 @@ Related area: `../habits/` (the home page, complete and freeze).
 
 ## evidence
 
-(none yet)
+- [undo-today-client-1.verify.md](evidence/undo-today-client-1.verify.md): verification of client slice 1 (`uncompleteHabit` in `app/lib/api.ts`, commit `8ea48ec`); builder sonnet, verifier opus; verdict green
 
 ## guides
 
