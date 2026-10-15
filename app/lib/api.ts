@@ -72,6 +72,10 @@ export function completeHabit(id: number): Promise<Habit> {
   return request<Habit>(`/habits/${id}/complete`, { method: "POST" });
 }
 
+export function uncompleteHabit(id: number): Promise<Habit> {
+  return request<Habit>(`/habits/${id}/complete`, { method: "DELETE" });
+}
+
 export function skipHabit(id: number): Promise<Habit> {
   return request<Habit>(`/habits/${id}/skip`, { method: "POST" });
 }

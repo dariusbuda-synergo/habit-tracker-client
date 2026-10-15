@@ -34,6 +34,7 @@ interface HabitCardProps {
   onDuplicate: (id: number) => void;
   onPinToggle?: (id: number, pinned: boolean) => void;
   onPriorityChange?: (id: number, priority: string) => void;
+  onUncomplete?: (id: number) => void;
 }
 
 export default function HabitCard({
@@ -47,6 +48,7 @@ export default function HabitCard({
   onDuplicate,
   onPinToggle,
   onPriorityChange,
+  onUncomplete,
 }: HabitCardProps) {
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(habit.name);
@@ -234,11 +236,16 @@ export default function HabitCard({
       </div>
       <div className="flex flex-wrap items-center gap-1 sm:shrink-0 sm:justify-end">
         <button
-          onClick={() => onComplete(habit.id)}
-          disabled={habit.completed_today || habit.archived}
-          className="rounded-full bg-emerald-600 px-4 py-1.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-emerald-700 disabled:opacity-50 disabled:hover:bg-emerald-600"
+          onClick={() => (habit.completed_today ? onUncomplete?.(habit.id) : onComplete(habit.id))}
+          disabled={habit.archived || (habit.completed_today && !onUncomplete)}
+          aria-label={habit.completed_today ? `Undo today's completion of ${habit.name}` : undefined}
+          className={
+            habit.completed_today
+              ? "rounded-full bg-emerald-100 px-4 py-1.5 text-sm font-medium text-emerald-700 shadow-sm transition-colors hover:bg-emerald-200 disabled:opacity-50 disabled:hover:bg-emerald-100 dark:bg-emerald-900/40 dark:text-emerald-400 dark:hover:bg-emerald-900/60"
+              : "rounded-full bg-emerald-600 px-4 py-1.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-emerald-700 disabled:opacity-50 disabled:hover:bg-emerald-600"
+          }
         >
-          {habit.completed_today ? "Done today" : "Mark done"}
+          {habit.completed_today ? "Undo" : "Mark done"}
         </button>
         <button
           onClick={() => (habit.skipped_today ? onUnskip(habit.id) : onSkip(habit.id))}
