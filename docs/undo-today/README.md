@@ -18,6 +18,7 @@ Related area: `../habits/` (the home page, complete and freeze).
 
 - [undo-today-client-1.verify.md](evidence/undo-today-client-1.verify.md): verification of client slice 1 (`uncompleteHabit` in `app/lib/api.ts`, commit `8ea48ec`); builder sonnet, verifier opus; verdict green
 - [undo-today-client-2.verify.md](evidence/undo-today-client-2.verify.md): verification of client slice 2 (`onUncomplete` prop and the Undo control on `HabitCard`, forwarded through `HabitList`, commit `a5be0ea`); builder sonnet, verifier opus; verdict green
+- [undo-today-client-3.verify.md](evidence/undo-today-client-3.verify.md): verification of client slice 3 (`handleUncomplete` on the home page and the list rendered whenever not loading, commit `bb39da4`); builder sonnet, verifier opus; verdict green
 
 ## guides
 
