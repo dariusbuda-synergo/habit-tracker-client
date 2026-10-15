@@ -1,0 +1,20 @@
+# codegraph configuration for habit-tracker-client (see ../dev-agent-kit/codegraph/codegraph.example.toml).
+# scip-typescript reads tsconfig.json; node_modules must be installed (npm install) before indexing.
+
+language = "typescript"
+
+# First match wins; a `*` segment is captured as the module name, otherwise the last segment is.
+modules = [
+  { pattern = "app/components/__tests__", kind = "test" },
+  { pattern = "app/lib/__tests__",        kind = "test" },
+  { pattern = "app/*/__tests__",          kind = "test" },
+  { pattern = "__tests__",                kind = "test" },
+  { pattern = "test",                     kind = "test" },
+  { pattern = "app/components",           kind = "ui" },
+  { pattern = "app/lib",                  kind = "library" },
+  { pattern = "app/types",                kind = "types" },
+  { pattern = "app/*",                    kind = "page" },
+  { pattern = "app",                      kind = "page" },
+]
+
+exclude = [".next/**", "out/**", "build/**", "coverage/**", "public/**", ".claude/**"]
