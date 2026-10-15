@@ -12,6 +12,7 @@ import {
   deleteHabit,
   listHabits,
   skipHabit,
+  uncompleteHabit,
   unskipHabit,
   updateHabit,
 } from "@/app/lib/api";
@@ -113,6 +114,16 @@ export default function Home() {
   async function handleUnskip(id: number) {
     const updated = await unskipHabit(id);
     setHabits((prev) => prev.map((h) => (h.id === id ? updated : h)));
+  }
+
+  async function handleUncomplete(id: number) {
+    try {
+      const updated = await uncompleteHabit(id);
+      setHabits((prev) => prev.map((h) => (h.id === id ? updated : h)));
+    } catch {
+      await loadHabits(categoryFilter, showArchived, priorityFilter);
+      setError("Could not undo that completion — refreshing the list.");
+    }
   }
 
   async function handleDelete(id: number) {
@@ -437,12 +448,13 @@ export default function Home() {
 
         {loading && <p className="text-sm text-zinc-500">Loading habits…</p>}
         {error && <p className="text-sm text-red-600">{error}</p>}
-        {!loading && !error && (
+        {!loading && (
           <HabitList
             habits={visibleHabits}
             onComplete={handleComplete}
             onSkip={handleSkip}
             onUnskip={handleUnskip}
+            onUncomplete={handleUncomplete}
             onDelete={handleDelete}
             onEdit={handleEdit}
             onArchiveToggle={handleArchiveToggle}
